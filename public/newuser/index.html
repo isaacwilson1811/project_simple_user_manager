@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New User</title>
+</head>
+<body>
+  <div style="margin:0 auto; border:1px solid gray; width:90%; height:100%; padding:32px;">
+    <p><a href="/">Go Back</a></p>
+    <h1>Create New User</h1>
+    <form action="/adduser" method="post">
+      <input type="number" name="userid" id="userid" placeholder="User ID">
+      <input type="text" name="name" id="name" placeholder="Name">
+      <input type="email" name="email" id="email" placeholder="Email Address">
+      <input type="number" name="age" id="age" placeholder="Age">
+      <input type="submit" value="submit">
+    </form>
+  </div>
+</body>
+</html>
