@@ -1,5 +1,6 @@
 // import modules
 const fs = require('fs');
+const path = require('path');
 const express = require('express');
 
 // global data structure in runtime memory
@@ -47,6 +48,10 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 
+// set the render view engine to use pug and the path to our pug files
+app.set('views', path.join(__dirname, 'render_views'));
+app.set('view engine', 'pug');
+
 // Server Events
 
 // When browser submits new user form data
@@ -72,8 +77,12 @@ app.post('/adduser', (request, response) => {
 
 // Serve dynamic User List Page/View
 app.get('/list', (request, response) => {
-  let html = renderUserList();
-  response.send(html);
+  if (USERS.length === 0){
+    response.send('There Are No Users');
+  }
+  else {
+    response.render('userlist', {users: USERS});
+  }
 });
 
 // Serve dynamic Edit User Page/View/Form
@@ -83,8 +92,9 @@ app.get('/edit/:id', (request, response) => {
     response.send(`User ID ${request.params.id} Does Not Exist`);
   }
   else {
-    let html = renderEditUser(index);
-    response.send(html);
+    response.render('edituser', USERS[index]);
+    // let html = renderEditUser(index);
+    // response.send(html);
   }
 });
 
@@ -122,64 +132,4 @@ function saveMemoryToDatabase() {
 }
 
 
-// ------------ HTML RENDERING FUNCTIONS -------------
-// User List HTML
-function renderUserList() {
-  let htmlHead = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>List Of Users</title>
-</head>`;
-  let bodyOpen = `
-<body>
-  <div style="margin:0 auto; border:1px solid gray; width:90%; height:100%; padding:32px;">
-    <p><a href="/">Go Back</a></p>
-    <h1>List Of Users</h1>
-    <ul>`;
-  let bodyClose = `
-    </ul>
-  </div>
-</body>
-</html>`;
-  if (USERS.length === 0) {
-    bodyOpen += '<li>There are no users in the database</li>';
-  }
-  else {  
-    USERS.forEach(user => {
-      let {userid, name, email, age} = user;
-      let listItem = `<li>User ID: ${userid} Name: ${name} Email Address: ${email} Age: ${age} <a href="/edit/${userid}">Edit This User</a></li>`;
-      bodyOpen += listItem;
-    });
-  }
-  let htmlBody = bodyOpen + bodyClose;
-  return htmlHead + htmlBody;
-}
-// Edit User HTML
-function renderEditUser(index) {
-  // let index = USERS.findIndex(user => user.userid === findID);
-  let {userid, name, email, age} = USERS[index];
-  let html = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit User ID</title>
-</head>
-<body>
-  <div style="margin:0 auto; border:1px solid gray; width:90%; height:100%; padding:32px;">
-    <p><a href="/">Go Back</a></p>
-    <h1>Editing User ID ${userid}</h1>
-    <form action="/modifyuser/${userid}" method="post">
-      <input type="number" name="userid" id="userid" placeholder="${userid}" disabled>
-      <input type="text" name="name" id="name" value="${name}" required>
-      <input type="email" name="email" id="email" value="${email}" required>
-      <input type="number" name="age" id="age" value="${age}" required>
-      <input type="submit" value="submit">
-    </form>
-  </div>
-</body>
-</html>`;
-  return html;
-}
+

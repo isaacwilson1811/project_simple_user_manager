@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title List Of Users
+  body
+    div(style="margin:0 auto; border:1px solid gray; width:90%; height:100%; padding:32px;")
+      p
+        a(href="/") Go Back
+      h1 List Of Users
+      ul
+        each user in users
+          li User ID: #{user.userid} Name: #{user.name} Email Address: #{user.email} Age: #{user.age}
+            a(href="/edit/"+user.userid)
+              button Edit This User

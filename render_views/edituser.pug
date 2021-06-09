@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title Edit User
+  body
+    div(style="margin:0 auto; border:1px solid gray; width:90%; height:100%; padding:32px;")
+      p
+        a(href="/") Go Back
+      h1 Editing User ID #{userid}
+      form(action="/modifyuser/"+userid, method="post") 
+        input(type="number", name=userid, placeholder=userid, disabled)
+        input(type="text", name="name", value=name, required)
+        input(type="text", name="email", value=email, required)
+        input(type="number", name="age", value=age, required)
+        input(type="submit", value="submit")
